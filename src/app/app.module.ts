@@ -16,7 +16,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER } from 'ngx-ui-loader';
 import { SignupComponent } from './signup/signup.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './material-component/login/login.component';
 import { TokenInterceptorInterceptor } from './token-interceptor.interceptor';
 import { CategoryComponent } from './material-component/dialog/category/category.component';
 import { ManageCategoryComponent } from './material-component/manage-category/manage-category.component';

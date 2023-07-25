@@ -6,7 +6,7 @@ import { GlobalConstants } from 'src/app/shared/global-constants';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-manage-category',
@@ -52,7 +52,7 @@ export class ManageCategoryComponent implements OnInit {
     dialogConfig.data = {
       action: 'Add'
     };
-    dialogConfig.width = "850px";
+    dialogConfig.width = "400px";
     const dialogRef = this.dialog.open(CategoryComponent, dialogConfig);
     this.router.events.subscribe(() => dialogRef.close());
 
@@ -65,7 +65,7 @@ export class ManageCategoryComponent implements OnInit {
       action: 'Edit',
       data: values
     };
-    dialogConfig.width = "850px";
+    dialogConfig.width = "400px";
     const dialogRef = this.dialog.open(CategoryComponent, dialogConfig);
     this.router.events.subscribe(() => dialogRef.close());
 

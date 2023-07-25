@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { FullComponent } from './layouts/full/full.component';
 import { RouteGuardService } from './services/route-guard.service';
+import { ManageCategoryComponent } from './material-component/manage-category/manage-category.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },

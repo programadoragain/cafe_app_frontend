@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SignupComponent } from '../signup/signup.component';
 import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
-import { LoginComponent } from '../login/login.component';
+import { LoginComponent } from '../material-component/login/login.component';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 
