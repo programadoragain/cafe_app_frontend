@@ -18,9 +18,6 @@ import { SignupComponent } from './signup/signup.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './material-component/login/login.component';
 import { TokenInterceptorInterceptor } from './token-interceptor.interceptor';
-import { CategoryComponent } from './material-component/dialog/category/category.component';
-import { ManageCategoryComponent } from './material-component/manage-category/manage-category.component';
-
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   text: "loading ...",
@@ -30,7 +27,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   fgsColor: "#7b1fa2",
   fgsType: SPINNER.squareJellyBox,
   fgsSize: 100,
-  hasProgressBar: false
+  hasProgressBar: true
 }  
 
 @NgModule({
@@ -43,9 +40,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppSidebarComponent,
     SignupComponent,
     ForgotPasswordComponent,
-    LoginComponent,
-    CategoryComponent,
-    ManageCategoryComponent
+    LoginComponent
    ],
   imports: [
     BrowserModule,

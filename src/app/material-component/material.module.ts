@@ -11,6 +11,10 @@ import { MaterialRoutes } from './material.routing';
 import { MaterialModule } from '../shared/material-module';
 import { ViewBillProductsComponent } from './dialog/view-bill-products/view-bill-products.component';
 import { ConfirmationComponent } from './dialog/confirmation/confirmation.component';
+import { CategoryComponent } from './dialog/category/category.component';
+import { ManageCategoryComponent } from './manage-category/manage-category.component';
+import { ManageProductComponent } from './manage-product/manage-product.component';
+import { ProductComponent } from './dialog/product/product.component';
 
 @NgModule({
   imports: [
@@ -26,7 +30,11 @@ import { ConfirmationComponent } from './dialog/confirmation/confirmation.compon
   providers: [],
   declarations: [
     ViewBillProductsComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    CategoryComponent,
+    ManageCategoryComponent,
+    ManageProductComponent,
+    ProductComponent
   ]
 })
 export class MaterialComponentsModule {}
