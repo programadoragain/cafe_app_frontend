@@ -34,8 +34,7 @@ export class ProductComponent implements OnInit {
       name: [null, [Validators.required, Validators.pattern(GlobalConstants.nameRegex)]],
       categoryId: [null, [Validators.required]],
       description: [null, [Validators.required]],
-      price: [null, [Validators.required]],
-      status: [null, [Validators.required]]
+      price: [null, [Validators.required]]
     });
 
     if (this.dialogData.action === 'Edit') {
@@ -66,7 +65,6 @@ export class ProductComponent implements OnInit {
       categoryId: formData.categoryId,
       description: formData.description ,
       price: formData.price,
-      status: formData.status
     }
 
     this.productService.add(data).subscribe((response: any) => {
@@ -94,7 +92,6 @@ export class ProductComponent implements OnInit {
       categoryId: formData.categoryId,
       description: formData.description ,
       price: formData.price,
-      status: formData.status
     }
 
     this.productService.update(data).subscribe((response: any) => {

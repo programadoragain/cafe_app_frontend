@@ -6,6 +6,8 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ProductService } from 'src/app/services/product.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global-constants';
+import { ProductComponent } from '../dialog/product/product.component';
+import { ConfirmationComponent } from '../dialog/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-manage-product',        
@@ -50,32 +52,50 @@ export class ManageProductComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  handleAddAction() { /*
+  handleAddAction() { 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       action: 'Add'
     };
     dialogConfig.width = "400px";
-    const dialogRef = this.dialog.open(productComponent, dialogConfig);
+    const dialogRef = this.dialog.open(ProductComponent, dialogConfig);
     this.router.events.subscribe(() => dialogRef.close());
 
-    const sub = dialogRef.componentInstance.onAddCategory.subscribe((response:any) => this.tableData()); */
+    const sub = dialogRef.componentInstance.onAddProduct.subscribe((response:any) => this.tableData());
   }
 
-  handleEditAction(values: any) {/*
+  handleEditAction(values: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       action: 'Edit',
       data: values
     };
     dialogConfig.width = "400px";
-    const dialogRef = this.dialog.open(productComponent, dialogConfig);
+    const dialogRef = this.dialog.open(ProductComponent, dialogConfig);
     this.router.events.subscribe(() => dialogRef.close());
 
-    const sub = dialogRef.componentInstance.onAddCategory.subscribe((response:any) => this.tableData()); */
+    const sub = dialogRef.componentInstance.onEditProduct.subscribe((response:any) => this.tableData());
   }
 
-  handleDeleteAction(values: any) {}
+  handleDeleteAction(values: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      message: 'delete product: ' + values.name,
+      confirmation: true
+    };
+    const dialogRef = this.dialog.open(ConfirmationComponent, dialogConfig);
+    const sub = dialogRef.componentInstance.onEmitStatusChange.subscribe((response:any) => {
+      this.ngxService.start();
+      this.deleteProduct(values.id);
+      dialogRef.close();
+    });
+  }
+
+  deleteProduct(id: any) {
+    this.productService.delete(id).subscribe((response:any) => {
+      
+    })
+  }
 
   onChange(status: any, id: any) {
 
