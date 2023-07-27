@@ -93,12 +93,41 @@ export class ManageProductComponent implements OnInit {
 
   deleteProduct(id: any) {
     this.productService.delete(id).subscribe((response:any) => {
-      
-    })
+      this.ngxService.stop();
+      this.tableData();
+      this.responseMessage= response?.message;
+      this.snackbarService.openSnackBar(this.responseMessage,"success");
+    }, (error: any) => {
+      this.ngxService.stop();
+      console.log(error.error?.message);
+      if (error.error?.message) this.responseMessage = error.error?.message;
+      else
+        this.responseMessage = GlobalConstants.genericError;
+
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    });
   }
 
   onChange(status: any, id: any) {
+    this.ngxService.start();
+    var data= {
+      status: status.toString,
+      id: id
+    }
 
+    this.productService.updateStatus(data).subscribe((response:any) => {
+      this.ngxService.stop();
+      this.responseMessage= response?.message;
+      this.snackbarService.openSnackBar(this.responseMessage,"success");
+    }, (error: any) => {
+      this.ngxService.stop();
+      console.log(error.error?.message);
+      if (error.error?.message) this.responseMessage = error.error?.message;
+      else
+        this.responseMessage = GlobalConstants.genericError;
+
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    });
   }
 
 }

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { ManageCategoryComponent } from './manage-category/manage-category.component';
 import { ManageProductComponent } from './manage-product/manage-product.component';
+import { ManageOrderComponent } from './manage-order/manage-order.component';
 
 
 export const MaterialRoutes: Routes = [
@@ -12,5 +13,9 @@ export const MaterialRoutes: Routes = [
     {
         path: 'manage-product',
         component: ManageProductComponent,
+    },
+    {
+        path: 'manage-order',
+        component: ManageOrderComponent,
     }
 ];

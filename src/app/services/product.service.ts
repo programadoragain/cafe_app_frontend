@@ -36,4 +36,14 @@ delete(id: any) {
   { headers: new HttpHeaders().set('Content-Type', 'application/json') });
 }
 
+getProductByCategory(id: any) {
+  return this.httpClient.get(this.url + "/product/getByCategory/" + id,
+  { headers: new HttpHeaders().set('Content-Type', 'application/json') });
+}
+
+getById(id: any) {
+  return this.httpClient.get(this.url + "/product/getById/" + id,
+  { headers: new HttpHeaders().set('Content-Type', 'application/json') });
+}
+
 }
