@@ -19,7 +19,6 @@ export class ManageProductComponent implements OnInit {
   displayedColums: string[] = ['name', 'categoryName', 'description', 'price', 'edit','status'];
   dataSource: any;
   responseMessage: any;
-  length: any;
 
   constructor(private productService: ProductService, 
     public ngxService: NgxUiLoaderService, 
