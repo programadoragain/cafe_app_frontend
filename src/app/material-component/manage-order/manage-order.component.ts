@@ -87,14 +87,18 @@ export class ManageOrderComponent implements OnInit {
   }
 
   validateProductAdd() {
-    if (this.manageOrderForm.controls['total'].value <= 0 || this.manageOrderForm.controls['total'].value === null ||
-        this.manageOrderForm.controls['total'].value <= 0) return true;
+    if (this.manageOrderForm.controls['total'].value <= 0 || this.manageOrderForm.controls['total'].value === null)
+      return true;
     else
       return false;    
   }
 
   validateSubmit() {
-    //to do
+    if (this.totalAmount === 0 || this.manageOrderForm.controls['name'].value === null ||
+    this.manageOrderForm.controls['email'].value === null || this.manageOrderForm.controls['paymentMethod'].value === null) 
+      return true;
+    else
+      return false;  
   }
 
   add() {
@@ -115,6 +119,36 @@ export class ManageOrderComponent implements OnInit {
   }
 
   submitAction() {
-    
+    var formData= this.manageOrderForm.value;
+    var data= {
+      name: formData.name,
+      email: formData.email,
+      contactNumber: formData.contactNumber,
+      paymentMethod: formData.paymentMethod,
+      totalAmount: this.totalAmount.toString(),
+      productDetails: JSON.stringify(this.dataSource)
+    }    
+
+    this.ngxService.start();
+    this.billService.generateReport(data).subscribe((response:any) => {
+      this.downloadFile(response?.uuid);
+      this.manageOrderForm.reset();
+      this.dataSource= [];
+      this.totalAmount= 0;
+    });
   }
+
+  downloadFile(fileName: string) {
+    var data= {
+      uuid: fileName
+    }
+
+    this.billService.getPdf(data).subscribe((response:any) => {
+      saveAs(response, fileName + '.pdf');
+      this.ngxService.stop();
+    });
+  }
+
 }
+
+
