@@ -25,5 +25,9 @@ getPdf(data: any): Observable<Blob> {
   return this.httpClient.post(this.url + "/bill/getPdf", data, {responseType: 'blob'});
 }
 
+delete(id: any) {
+  return this.httpClient.post(this.url + "/bill/delete/" + id,
+  { headers: new HttpHeaders().set('Content-Type', 'application/json') });
+}
 
 }
