@@ -32,7 +32,7 @@ export class ManageProductComponent implements OnInit {
   }
 
   tableData() {
-    this.productService.getProducts().subscribe((response: any) => {
+    this.productService.getAllProducts().subscribe((response: any) => {
       this.ngxService.stop();
       this.dataSource = new MatTableDataSource(response);
     }, (error: any) => {

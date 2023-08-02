@@ -8,9 +8,10 @@ import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global-constants';
 import { ProductComponent } from '../dialog/product/product.component';
 import { ConfirmationComponent } from '../dialog/confirmation/confirmation.component';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from 'src/app/services/category.service';
 import { BillService } from 'src/app/services/bill.service';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-manage-order',
@@ -19,7 +20,7 @@ import { BillService } from 'src/app/services/bill.service';
 })
 export class ManageOrderComponent implements OnInit {
 
-  displayedColums: string[] = ['name', 'categoryName', 'price', 'quantity', 'total', 'edit'];
+  displayedColums: string[] = ['name', 'categoryName', 'price', 'quantity', 'total', 'delete'];
   dataSource: any = [];
   manageOrderForm: any = FormGroup;
   categorys: any = [];
@@ -42,6 +43,7 @@ export class ManageOrderComponent implements OnInit {
     this.manageOrderForm = this.formBuilder.group({
       name: [null, [Validators.required, Validators.pattern(GlobalConstants.nameRegex)]],
       email: [null, [Validators.required, Validators.pattern(GlobalConstants.emailRegex)]],
+      contactNumber: [null, [Validators.required, Validators.pattern(GlobalConstants.phoneRegex)]],
       product: [null, [Validators.required]],
       categoryName: [null, [Validators.required]],
       price: [null, [Validators.required]],
@@ -59,26 +61,42 @@ export class ManageOrderComponent implements OnInit {
   }
 
   getProductByCategory(values: any) {
-    this.productService.getProductByCategory(values.id).subscribe((response:any) => {
+    this.productService.getAllProductsByCategory(values.id).subscribe((response:any) => {
       this.products= response;
       this.manageOrderForm.controls['price'].setValue('');
       this.manageOrderForm.controls['quantity'].setValue('');
       this.manageOrderForm.controls['total'].setValue('');
-    })
-  }
+    }, (error: any) => {
+      this.ngxService.stop();
+      console.log(error.error?.message);
+      if (error.error?.message) this.responseMessage = error.error?.message;
+      else
+        this.responseMessage = GlobalConstants.genericError;
+
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    });
+  }  
 
   getProductDetails(value: any) {
-    this.productService.getById(value.id).subscribe((response:any) => {
+    this.productService.getProductById(value.id).subscribe((response:any) => {
       this.price= response.price;
       this.manageOrderForm.controls['price'].setValue(response.price);
       this.manageOrderForm.controls['quantity'].setValue(1);
       this.manageOrderForm.controls['total'].setValue(this.price * 1);
+    }, (error: any) => {
+      this.ngxService.stop();
+      console.log(error.error?.message);
+      if (error.error?.message) this.responseMessage = error.error?.message;
+      else
+        this.responseMessage = GlobalConstants.genericError;
+
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
     });
   }  
 
   setQuantity(value: any) {
     var temp= this.manageOrderForm.controls['quantity'].value;
-    if (temp > 0) this.manageOrderForm.comtrols['total'].setValue(this.manageOrderForm.controls['quantity'].value * this.manageOrderForm.controls['price'].value);
+    if (temp > 0) this.manageOrderForm.controls['total'].setValue(this.manageOrderForm.controls['quantity'].value * this.manageOrderForm.controls['price'].value);
     else 
       if ((temp <= 0) || (temp=""))  {
         this.manageOrderForm.controls['quantity'].setValue(0);
@@ -86,7 +104,7 @@ export class ManageOrderComponent implements OnInit {
       }
   }
 
-  validateProductAdd() {
+  validateProductAdd(): boolean {
     if (this.manageOrderForm.controls['total'].value <= 0 || this.manageOrderForm.controls['total'].value === null)
       return true;
     else
@@ -106,7 +124,7 @@ export class ManageOrderComponent implements OnInit {
     var productName= this.dataSource.find((e: { id: any; }) => e.id === formData.product.id);
     if (productName === undefined) {
       this.totalAmount= this.totalAmount + formData.total;
-      this.dataSource.push({id:formData.product.id, name:formData.product.name, category: formData.category.name, quantity: formData.quantity, price: formData.price, total: formData.total});
+      this.dataSource.push({id:formData.product.id, name:formData.product.name, category: formData.categoryName.name, quantity: formData.quantity, price: formData.price, total: formData.total});
       this.dataSource= [...this.dataSource];
       this.snackbarService.openSnackBar(GlobalConstants.productAdded,"success");
     }

@@ -7,9 +7,10 @@ mat-form-field {
 }
 
 table {
-    width: 90%;
+    width: 100%;
 }
 
-mat-card{
-    padding-bottom: 30px !important;
+.card-table {
+    padding-right: 5px;
+    padding-left: 5px;
 }

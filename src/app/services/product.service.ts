@@ -16,14 +16,23 @@ add(data: any) {
     { headers: new HttpHeaders().set('Content-Type', 'application/json') });
 }  
 
-
 update(data: any) {
   return this.httpClient.post(this.url + "/product/update", data,
     { headers: new HttpHeaders().set('Content-Type', 'application/json') });
 }
 
-getProducts() {
-  return this.httpClient.get(this.url + "/product/get");
+getAllProducts() {
+  return this.httpClient.get(this.url + "/product/getAllProducts");
+}
+
+getAllProductsByCategory(id: any) {
+  return this.httpClient.get(this.url + "/product/getAllProductsByCategory/" + id,
+  { headers: new HttpHeaders().set('Content-Type', 'application/json') });
+}
+
+getProductById(id: any) {
+  return this.httpClient.get(this.url + "/product/getProductById/" + id,
+  { headers: new HttpHeaders().set('Content-Type', 'application/json') });
 }
 
 updateStatus(data: any) {
@@ -33,16 +42,6 @@ updateStatus(data: any) {
 
 delete(id: any) {
   return this.httpClient.post(this.url + "/product/delete/" + id,
-  { headers: new HttpHeaders().set('Content-Type', 'application/json') });
-}
-
-getProductByCategory(id: any) {
-  return this.httpClient.get(this.url + "/product/getByCategory/" + id,
-  { headers: new HttpHeaders().set('Content-Type', 'application/json') });
-}
-
-getById(id: any) {
-  return this.httpClient.get(this.url + "/product/getById/" + id,
   { headers: new HttpHeaders().set('Content-Type', 'application/json') });
 }
 
