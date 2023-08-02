@@ -7,6 +7,7 @@ import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global-constants';
 import { BillService } from 'src/app/services/bill.service';
 import { ViewBillProductsComponent } from '../dialog/view-bill-products/view-bill-products.component';
+import { ConfirmationComponent } from '../dialog/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-view-bill',
@@ -15,55 +16,102 @@ import { ViewBillProductsComponent } from '../dialog/view-bill-products/view-bil
 })
 export class ViewBillComponent implements OnInit {
 
-  displayedColums: string[] = ['name', 'email', 'contactNumber', 'paymentMethod', 'total','view'];
+  displayedColums: string[] = ['name', 'email', 'contactNumber', 'paymentMethod', 'total', 'action'];
   dataSource: any;
   responseMessage: any;
 
-  constructor(private billService: BillService, 
-    public ngxService: NgxUiLoaderService, 
-    private dialog: MatDialog, 
-    private snackbarService: SnackbarService, 
+  constructor(private billService: BillService,
+    public ngxService: NgxUiLoaderService,
+    private dialog: MatDialog,
+    private snackbarService: SnackbarService,
     private router: Router) { }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
+    this.ngxService.start();
+    this.tableData();
+  }
+
+  tableData() {
+    this.billService.getBills().subscribe((response: any) => {
+      this.ngxService.stop();
+      this.dataSource = new MatTableDataSource(response);
+    }, (error: any) => {
+      this.ngxService.stop();
+      console.log(error.error?.message);
+      if (error.error?.message) this.responseMessage = error.error?.message;
+      else
+        this.responseMessage = GlobalConstants.genericError;
+
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  handleViewAction(values: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      action: values
+    };
+    dialogConfig.width = "100%";
+    const dialogRef = this.dialog.open(ViewBillProductsComponent, dialogConfig);
+    this.router.events.subscribe(() => dialogRef.close());
+
+  }
+
+  handleDeleteAction(values: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      message: 'delete: ' + values.name + ' bill',
+      confirmation: true
+    };
+    const dialogRef = this.dialog.open(ConfirmationComponent, dialogConfig);
+    const sub = dialogRef.componentInstance.onEmitStatusChange.subscribe((response: any) => {
       this.ngxService.start();
+      this.deleteBill(values.id);
+      dialogRef.close();
+    });
+  }
+
+  deleteBill(id: any) {
+      this.billService.delete(id).subscribe((response:any) => {
+      this.ngxService.stop();
       this.tableData();
-    }
-  
-    tableData() {
-      this.billService.getBills().subscribe((response: any) => {
-        this.ngxService.stop();
-        this.dataSource = new MatTableDataSource(response);
-      }, (error: any) => {
-        this.ngxService.stop();
-        console.log(error.error?.message);
-        if (error.error?.message) this.responseMessage = error.error?.message;
-        else
-          this.responseMessage = GlobalConstants.genericError;
-  
-        this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
-      });
-    }
+      this.responseMessage= response?.message;
+      this.snackbarService.openSnackBar(this.responseMessage,"success");
+    }, (error: any) => {
+      this.ngxService.stop();
+      console.log(error.error?.message);
+      if (error.error?.message) this.responseMessage = error.error?.message;
+      else
+        this.responseMessage = GlobalConstants.genericError;
 
-    applyFilter(event: Event) {
-      const filterValue = (event.target as HTMLInputElement).value;
-      this.dataSource.filter = filterValue.trim().toLowerCase();
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    });
+  }
+
+  downloadReportAction(values: any) { 
+    this.ngxService.start();
+    var data= {
+      name: values.name,
+      email: values.email,
+      uuid: values.uuid,
+      contactNumber: values.contactNumber,
+      paymentMethod: values.paymentMethod,
+      totalAmount: values.total.toString(),
+      productDetails: values.productDetails
     }
-  
-    handleViewAction(values: any) { 
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.data = {
-        action: values
-      };
-      dialogConfig.width = "100%";
-      const dialogRef = this.dialog.open(ViewBillProductsComponent, dialogConfig);
-      this.router.events.subscribe(() => dialogRef.close());
-  
-    }
+    this.downloadFile(values.uuid, data);
+  }
 
-    downloadReportAction(data: any) {}
-
-    handleDeleteAction(data: any) {}
-
+  downloadFile(fileName: string, data: any) {
+    this.billService.getPdf(data).subscribe((response) => {
+      saveAs(response, filename + '.pdf');
+      this.ngxService.stop();
+    });
+  }
 
 }

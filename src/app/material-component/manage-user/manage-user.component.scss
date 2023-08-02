@@ -1,0 +1,16 @@
+mat-card {
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+}
+
+.float-right {
+    float: right;
+}
+
+::ng-deep .highlight {
+    color: white;
+    background: #673AB7
+}
