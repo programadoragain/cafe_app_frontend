@@ -13,7 +13,7 @@ url = environment.apiUrl;
 constructor(private httpClient: HttpClient) { }
 
 getBills() {
-  return this.httpClient.get(this.url + "/bill/getBills");
+  return this.httpClient.get(this.url + "/bill/getAllBills");
 }
 
 generateReport(data: any) {

@@ -8,6 +8,7 @@ import { GlobalConstants } from 'src/app/shared/global-constants';
 import { BillService } from 'src/app/services/bill.service';
 import { ViewBillProductsComponent } from '../dialog/view-bill-products/view-bill-products.component';
 import { ConfirmationComponent } from '../dialog/confirmation/confirmation.component';
+import * as saveAs from 'file-saver';
 
 @Component({
   selector: 'app-view-bill',
@@ -109,7 +110,7 @@ export class ViewBillComponent implements OnInit {
 
   downloadFile(fileName: string, data: any) {
     this.billService.getPdf(data).subscribe((response) => {
-      saveAs(response, filename + '.pdf');
+      saveAs(response, fileName + '.pdf');
       this.ngxService.stop();
     });
   }
